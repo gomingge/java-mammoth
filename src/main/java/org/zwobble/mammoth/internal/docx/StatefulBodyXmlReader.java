@@ -185,6 +185,7 @@ class StatefulBodyXmlReader {
                     isStrikethrough(properties),
                     isAllCaps(properties),
                     isSmallCaps(properties),
+                    getFont(properties),
                     readVerticalAlignment(properties),
                     style,
                     children
@@ -200,6 +201,11 @@ class StatefulBodyXmlReader {
     private boolean isBold(XmlElementLike properties) {
         return readBooleanElement(properties, "w:b");
     }
+
+    private Font getFont(XmlElementLike properties) {
+        return readFontIndent(properties);
+    }
+
 
     private boolean isItalic(XmlElementLike properties) {
         return readBooleanElement(properties, "w:i");
@@ -362,8 +368,17 @@ class StatefulBodyXmlReader {
                 indent.getAttributeOrNone("w:right")
             ),
             indent.getAttributeOrNone("w:firstLine"),
-            indent.getAttributeOrNone("w:hanging")
+            indent.getAttributeOrNone("w:hanging"),
+            properties.findChildOrEmpty("w:jc").getAttributeOrNone("w:val")
         );
+    }
+
+    private Font readFontIndent(XmlElementLike properties) {
+        return new Font(
+                readVal(properties, "w:color"),
+                readVal(properties,"w:highlight"),
+                readAscii(properties,"w:rFonts"),
+                readVal(properties,"w:sz"));
     }
 
     private ReadResult readSymbol(XmlElement element) {
@@ -639,5 +654,8 @@ class StatefulBodyXmlReader {
 
     private Optional<String> readVal(XmlElementLike element, String name) {
         return element.findChildOrEmpty(name).getAttributeOrNone("w:val");
+    }
+    private Optional<String> readAscii(XmlElementLike element, String name) {
+        return element.findChildOrEmpty(name).getAttributeOrNone("w:ascii");
     }
 }

@@ -155,7 +155,17 @@ public class DocumentToHtml {
                     if (paragraph.getStyle().isPresent()) {
                         warnings.add("Unrecognised paragraph style: " + paragraph.getStyle().get().describe());
                     }
-                    return HtmlPath.element("p");
+                    ParagraphIndent indent = paragraph.getIndent();
+                    if (indent.getAlign().isPresent()) {
+                        Map<String, String> map = new HashMap<>();
+                        map.put("align", indent.getAlign().get());
+                        if (indent.getFirstLine().isPresent()) {
+                            return HtmlPath.element("blockquote",map);
+                        }
+                        return HtmlPath.element("p",map);
+                    }else {
+                        return HtmlPath.element("p");
+                    }
                 });
             return mapping.wrap(children).get();
         }
@@ -186,6 +196,27 @@ public class DocumentToHtml {
             }
             if (run.isBold()) {
                 nodes = styleMap.getBold().orElse(HtmlPath.collapsibleElement("strong")).wrap(nodes);
+            }
+            Font font = run.getFont();
+            if (font != null) {
+                Map<String, String> map = new HashMap<>();
+                StringBuilder fontParam = new StringBuilder();
+                if (font.getColor().isPresent()) {
+                    fontParam.append("color: ").append(font.getColor().get()).append(";");
+                }
+                if (font.getHighlight().isPresent()) {
+                    fontParam.append("background-color: ").append(font.getHighlight().get()).append(";");
+                }
+                if (font.getFontType().isPresent()) {
+                    fontParam.append("font-family: ").append(font.getFontType().get()).append(";");
+                }
+                if (font.getFontSize().isPresent()) {
+                    fontParam.append("font-size: ").append(font.getFontSize().get()).append(";");
+                }
+                if (fontParam.length() > 0) {
+                    map.put("style", fontParam.toString());
+                    nodes = HtmlPath.collapsibleElement("span", map).wrap(nodes);
+                }
             }
             HtmlPath mapping = styleMap.getRunHtmlPath(run)
                 .orElseGet(() -> {

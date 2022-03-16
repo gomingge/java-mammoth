@@ -10,6 +10,7 @@ public class Run implements DocumentElement, HasChildren {
     private final boolean isStrikethrough;
     private final boolean isAllCaps;
     private final boolean isSmallCaps;
+    private final Font font;
     private final VerticalAlignment verticalAlignment;
     private final Optional<Style> style;
     private final List<DocumentElement> children;
@@ -21,6 +22,7 @@ public class Run implements DocumentElement, HasChildren {
         boolean isStrikethrough,
         boolean isAllCaps,
         boolean isSmallCaps,
+        Font font,
         VerticalAlignment verticalAlignment,
         Optional<Style> style,
         List<DocumentElement> children
@@ -31,6 +33,7 @@ public class Run implements DocumentElement, HasChildren {
         this.isStrikethrough = isStrikethrough;
         this.isAllCaps = isAllCaps;
         this.isSmallCaps = isSmallCaps;
+        this.font = font;
         this.verticalAlignment = verticalAlignment;
         this.style = style;
         this.children = children;
@@ -58,6 +61,10 @@ public class Run implements DocumentElement, HasChildren {
 
     public boolean isSmallCaps() {
         return isSmallCaps;
+    }
+
+    public Font getFont() {
+        return font;
     }
 
     public VerticalAlignment getVerticalAlignment() {

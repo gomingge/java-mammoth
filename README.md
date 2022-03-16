@@ -1,5 +1,9 @@
 # Mammoth .docx to HTML converter for Java/JVM
 
+> 在mammoth的基础上，增加字体颜色，字体样式，字体大小，缩进，对齐方式等样式支持
+> 
+> On a Mammoth basis, Add style support for font color, font style, font size, indentation, alignment, etc
+
 Mammoth is designed to convert .docx documents,
 such as those created by Microsoft Word, Google Docs and LibreOffice,
 and convert them to HTML.
